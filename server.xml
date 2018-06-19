@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><server>
+    <featureManager>
+        <feature>jsp-2.3</feature>
+        <feature>servlet-3.1</feature>
+    </featureManager>
+    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+    <!-- <variable name="DERBY_JDBC_DRIVER_PATH" value="${WAS_INSTALL_ROOT}/derby/lib"/> -->
+    <variable name="DERBY_JDBC_DRIVER_PATH" value="/config/lib"/>
+</server>
