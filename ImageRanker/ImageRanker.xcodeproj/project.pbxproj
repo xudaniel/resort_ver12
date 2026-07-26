@@ -1,0 +1,302 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B0A0A1A12B0A000100000001 /* ImageRankerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A0A1A02B0A000100000001 /* ImageRankerApp.swift */; };
+		B0A0A1A32B0A000100000002 /* RankingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A0A1A22B0A000100000002 /* RankingEngine.swift */; };
+		B0A0A1A52B0A000100000003 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A0A1A42B0A000100000003 /* RootView.swift */; };
+		B0A0A1A72B0A000100000004 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A0A1A62B0A000100000004 /* PickerView.swift */; };
+		B0A0A1A92B0A000100000005 /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A0A1A82B0A000100000005 /* CompareView.swift */; };
+		B0A0A1AB2B0A000100000006 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A0A1AA2B0A000100000006 /* ResultsView.swift */; };
+		B0A0A1AD2B0A000100000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0A0A1AC2B0A000100000007 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B0A0A19E2B0A000100000001 /* ImageRanker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageRanker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0A0A1A02B0A000100000001 /* ImageRankerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRankerApp.swift; sourceTree = "<group>"; };
+		B0A0A1A22B0A000100000002 /* RankingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingEngine.swift; sourceTree = "<group>"; };
+		B0A0A1A42B0A000100000003 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B0A0A1A62B0A000100000004 /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
+		B0A0A1A82B0A000100000005 /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
+		B0A0A1AA2B0A000100000006 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
+		B0A0A1AC2B0A000100000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B0A0A19B2B0A000100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B0A0A1952B0A000100000001 = {
+			isa = PBXGroup;
+			children = (
+				B0A0A1AE2B0A000100000001 /* ImageRanker */,
+				B0A0A19F2B0A000100000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B0A0A19F2B0A000100000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B0A0A19E2B0A000100000001 /* ImageRanker.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B0A0A1AE2B0A000100000001 /* ImageRanker */ = {
+			isa = PBXGroup;
+			children = (
+				B0A0A1A02B0A000100000001 /* ImageRankerApp.swift */,
+				B0A0A1AF2B0A000100000001 /* Models */,
+				B0A0A1B02B0A000100000001 /* Views */,
+				B0A0A1AC2B0A000100000007 /* Assets.xcassets */,
+			);
+			path = ImageRanker;
+			sourceTree = "<group>";
+		};
+		B0A0A1AF2B0A000100000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B0A0A1A22B0A000100000002 /* RankingEngine.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B0A0A1B02B0A000100000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B0A0A1A42B0A000100000003 /* RootView.swift */,
+				B0A0A1A62B0A000100000004 /* PickerView.swift */,
+				B0A0A1A82B0A000100000005 /* CompareView.swift */,
+				B0A0A1AA2B0A000100000006 /* ResultsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B0A0A19D2B0A000100000001 /* ImageRanker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0A0A1B12B0A000100000001 /* Build configuration list for PBXNativeTarget "ImageRanker" */;
+			buildPhases = (
+				B0A0A19A2B0A000100000001 /* Sources */,
+				B0A0A19B2B0A000100000001 /* Frameworks */,
+				B0A0A19C2B0A000100000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ImageRanker;
+			productName = ImageRanker;
+			productReference = B0A0A19E2B0A000100000001 /* ImageRanker.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B0A0A1962B0A000100000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					B0A0A19D2B0A000100000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = B0A0A1992B0A000100000001 /* Build configuration list for PBXProject "ImageRanker" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B0A0A1952B0A000100000001;
+			productRefGroup = B0A0A19F2B0A000100000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B0A0A19D2B0A000100000001 /* ImageRanker */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B0A0A19C2B0A000100000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0A0A1AD2B0A000100000007 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B0A0A19A2B0A000100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0A0A1A12B0A000100000001 /* ImageRankerApp.swift in Sources */,
+				B0A0A1A32B0A000100000002 /* RankingEngine.swift in Sources */,
+				B0A0A1A52B0A000100000003 /* RootView.swift in Sources */,
+				B0A0A1A72B0A000100000004 /* PickerView.swift in Sources */,
+				B0A0A1A92B0A000100000005 /* CompareView.swift in Sources */,
+				B0A0A1AB2B0A000100000006 /* ResultsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B0A0A1B22B0A000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B0A0A1B32B0A000100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B0A0A1B42B0A000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "ImageRanker needs access to your photos so you can pick which ones to compare and rank.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.imageranker.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B0A0A1B52B0A000100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "ImageRanker needs access to your photos so you can pick which ones to compare and rank.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.imageranker.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B0A0A1992B0A000100000001 /* Build configuration list for PBXProject "ImageRanker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0A0A1B22B0A000100000001 /* Debug */,
+				B0A0A1B32B0A000100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0A0A1B12B0A000100000001 /* Build configuration list for PBXNativeTarget "ImageRanker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0A0A1B42B0A000100000001 /* Debug */,
+				B0A0A1B52B0A000100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B0A0A1962B0A000100000001 /* Project object */;
+}
