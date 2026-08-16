@@ -12,6 +12,8 @@ import SwiftUI
 ///
 /// Phase 3 — search for #3 (≤ 2·log₂N comparisons): #3 must be one of #1's
 /// remaining direct victims OR one of #2's direct victims.
+///
+/// Worst-case total: (N-1) + (log₂N-1) + (2·log₂N-3) = N + 3·log₂N - 5
 final class RankingEngine: ObservableObject {
     enum Phase: Equatable { case idle, comparing, done }
     struct Pair: Equatable { let left: Int; let right: Int }
@@ -99,7 +101,11 @@ final class RankingEngine: ObservableObject {
         }
 
         let logN = Int(ceil(log2(Double(n))))
-        estimatedTotal = max(1, (n - 1) + 2 * logN - 1)
+        // Worst-case: (N-1) + (logN-1) + (2·logN-3) = N + 3·logN - 5
+        // = (N-1) + 3·logN - 4
+        // This bounds Phase 2 (search among champion's ≤logN direct victims)
+        // plus Phase 3 (champion's remaining victims + runner-up's direct victims).
+        estimatedTotal = max(1, (n - 1) + 3 * logN - 4)
         progress = (0, estimatedTotal)
         directLosses = Array(repeating: [], count: n)
         tournamentLeaders = Array(0..<n)

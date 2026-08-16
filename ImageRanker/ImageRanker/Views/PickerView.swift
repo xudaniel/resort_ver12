@@ -127,7 +127,8 @@ struct PickerView: View {
     private func estimatedComparisons(n: Int) -> Int {
         guard n > 1 else { return 0 }
         let logN = Int(ceil(log2(Double(n))))
-        return max(1, (n - 1) + 2 * logN - 1)
+        // Same formula as RankingEngine.start(): (N-1) + 3*logN - 4
+        return max(1, (n - 1) + 3 * logN - 4)
     }
 }
 
