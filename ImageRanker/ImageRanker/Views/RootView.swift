@@ -37,7 +37,12 @@ struct RootView: View {
         }
     }
 
-    private func reset() { screen = .pick }
+    private func reset() {
+        // Release decoded images before returning to PickerView so memory
+        // from the previous batch is freed before a new selection is loaded.
+        engine.clear()
+        screen = .pick
+    }
 }
 
 #Preview { RootView() }

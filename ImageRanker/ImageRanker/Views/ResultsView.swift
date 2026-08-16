@@ -8,36 +8,40 @@ struct ResultsView: View {
     private static let ringColors: [Color] = [.yellow, .gray, .orange]
 
     var body: some View {
-        VStack(spacing: 28) {
-            Text("Your Top \(engine.result.count)")
-                .font(.title2.bold())
-                .padding(.top, 8)
+        // ScrollView lets the rank list and restart button remain reachable
+        // on compact landscape heights (~300pt) where the podium alone would
+        // fill most of the available space.
+        ScrollView {
+            VStack(spacing: 28) {
+                Text("Your Top \(engine.result.count)")
+                    .font(.title2.bold())
+                    .padding(.top, 8)
 
-            podium
+                podium
 
-            VStack(spacing: 12) {
-                ForEach(Array(engine.result.enumerated()), id: \.offset) { rank, index in
-                    rankRow(rank: rank, index: index)
+                VStack(spacing: 12) {
+                    ForEach(Array(engine.result.enumerated()), id: \.offset) { rank, index in
+                        rankRow(rank: rank, index: index)
+                    }
                 }
-            }
-            .padding(.horizontal, 24)
+                .padding(.horizontal, 24)
 
-            Spacer()
-
-            Button(action: onRestart) {
-                Label("Start Over", systemImage: "arrow.counterclockwise")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding()
+                Button(action: onRestart) {
+                    Label("Start Over", systemImage: "arrow.counterclockwise")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.horizontal, 32)
+                .padding(.bottom, 16)
             }
-            .buttonStyle(.borderedProminent)
-            .padding(.horizontal, 32)
-            .padding(.bottom, 16)
         }
     }
 
-    /// Adaptive podium: sizes scale with available width so the layout fits
-    /// on 320pt compact screens as well as large iPhones/iPads.
+    /// Adaptive podium: sizes scale with available width and are capped by
+    /// the available height so wide windows (iPad, landscape) don't produce
+    /// oversized circles that overflow the GeometryReader frame.
     private var podium: some View {
         let order: [Int] = {
             switch engine.result.count {
@@ -56,7 +60,12 @@ struct ResultsView: View {
             let hasFirst = order.contains(0)
             let firstMult: CGFloat = hasFirst ? 1.35 : 1.0
             let otherCount = CGFloat(order.filter { $0 != 0 }.count)
-            let unit = available / (otherCount + firstMult * (hasFirst ? 1 : 0))
+            let unitFromWidth = available / (otherCount + firstMult * (hasFirst ? 1 : 0))
+            // Reserve ~55pt for medal emoji + VStack spacing above the image circle;
+            // this prevents firstSize from exceeding the GeometryReader height on wide
+            // screens (e.g. iPad) where width-only sizing yields 300–400pt values.
+            let maxFirstSize = max(0, geo.size.height - 55)
+            let unit = min(unitFromWidth, maxFirstSize / firstMult)
             let firstSize = unit * firstMult
 
             HStack(alignment: .bottom, spacing: spacing) {

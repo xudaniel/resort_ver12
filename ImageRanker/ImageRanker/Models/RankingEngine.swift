@@ -42,6 +42,25 @@ final class RankingEngine: ObservableObject {
         start()
     }
 
+    /// Releases all decoded images and resets to idle. Call this when the user
+    /// starts over so the old batch is freed before the next selection is loaded.
+    func clear() {
+        images = []
+        result = []
+        phase = .idle
+        currentPair = nil
+        progress = (0, 1)
+        directLosses = []
+        tournamentLeaders = []
+        comparisonsCompleted = 0
+        estimatedTotal = 1
+        searchDone = nil
+        searchLeader = -1
+        searchQueue = []
+        finalist = -1
+        secondPlace = -1
+    }
+
     func pick(winner: Int, loser: Int) {
         guard phase == .comparing, currentPair != nil else { return }
         currentPair = nil
