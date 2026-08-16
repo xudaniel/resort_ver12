@@ -97,9 +97,9 @@ struct PickerView: View {
         isLoading = true
         var loaded: [UIImage] = []
         for item in items {
-            guard !Task.isCancelled else { return }  // leave isLoading=true; newer task owns it
+            guard !Task.isCancelled else { return }
             if let data = try? await item.loadTransferable(type: Data.self),
-               let image = downsample(data: data, maxDimension: 1_200) {
+               let image = downsample(data: data, maxDimension: 800) {
                 loaded.append(image)
             }
         }
@@ -108,8 +108,9 @@ struct PickerView: View {
         isLoading = false
     }
 
-    /// Decodes at most maxDimension×maxDimension pixels using ImageIO, avoiding a
-    /// full-resolution decode of potentially 48 MP camera images.
+    /// Decodes at most maxDimension×maxDimension pixels using ImageIO.
+    /// 800px gives ample quality for comparison cards while keeping
+    /// 100-photo selections within ~256 MB of pixel buffer memory.
     private func downsample(data: Data, maxDimension: CGFloat) -> UIImage? {
         let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions) else { return nil }

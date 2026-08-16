@@ -4,15 +4,14 @@ import SwiftUI
 /// via a queue-based tournament:
 ///
 /// Phase 1 — tournament (N-1 comparisons): the front two leaders are compared;
-/// the loser's index is appended to the winner's directLosses list and the winner
-/// goes to the back of the queue. After N-1 rounds one leader remains (#1).
+/// the loser is appended to the winner's directLosses list and the winner goes
+/// to the back of the queue. After N-1 rounds one leader remains (#1).
 ///
 /// Phase 2 — search for #2 (≤ log₂N comparisons): #2 must be one of the images
-/// that #1 directly beat. A linear "current leader vs next challenger" search finds
-/// it.
+/// that #1 directly beat. A linear search finds it.
 ///
 /// Phase 3 — search for #3 (≤ 2·log₂N comparisons): #3 must be one of #1's
-/// remaining direct victims OR one of #2's direct victims. Same linear search.
+/// remaining direct victims OR one of #2's direct victims.
 final class RankingEngine: ObservableObject {
     enum Phase: Equatable { case idle, comparing, done }
     struct Pair: Equatable { let left: Int; let right: Int }
@@ -24,16 +23,13 @@ final class RankingEngine: ObservableObject {
 
     private(set) var images: [UIImage] = []
 
-    // Tournament state
     private var tournamentLeaders: [Int] = []
     // directLosses[i] = indices of images that image i directly beat in the tournament
     private var directLosses: [[Int]] = []
 
-    // Post-tournament
     private var finalist = -1
     private var secondPlace = -1
 
-    // Linear-search state (reused for phase 2 and phase 3)
     private var searchLeader = -1
     private var searchQueue: [Int] = []
     private var searchDone: (() -> Void)?
@@ -99,8 +95,10 @@ final class RankingEngine: ObservableObject {
             finalist = tournamentLeaders[0]
             let victims = directLosses[finalist]
 
+            // Only the n==2 path (handled above) should produce an empty victims list.
+            // For n>=3 always enter the search so #3 can be found among the victim's
+            // own direct losses even when the finalist has just one direct victim.
             if victims.isEmpty { result = [finalist]; phase = .done; return }
-            if victims.count == 1 { result = [finalist, victims[0]]; phase = .done; return }
 
             beginSearch(candidates: victims, onDone: finishSecondSearch)
             return
@@ -109,8 +107,6 @@ final class RankingEngine: ObservableObject {
     }
 
     private func applyTournament(winner: Int, loser: Int) {
-        // Record only the direct loss — not the loser's prior victims.
-        // This keeps directLosses[finalist] to O(log N) entries.
         directLosses[winner].append(loser)
         tournamentLeaders.removeFirst(2)
         tournamentLeaders.append(winner)
@@ -136,7 +132,6 @@ final class RankingEngine: ObservableObject {
 
     private func finishSecondSearch() {
         secondPlace = searchLeader
-        // #3 must be one of finalist's remaining direct victims OR one of #2's direct victims.
         let remaining = directLosses[finalist].filter { $0 != secondPlace }
                       + directLosses[secondPlace]
         guard !remaining.isEmpty else { result = [finalist, secondPlace]; phase = .done; return }

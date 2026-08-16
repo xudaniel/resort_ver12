@@ -68,9 +68,11 @@ struct CompareView: View {
 
         ZStack(alignment: .topTrailing) {
             if engine.images.indices.contains(index) {
+                // scaledToFit shows the complete photo — fill would crop
+                // landscape images to a narrow center strip.
                 Image(uiImage: engine.images[index])
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             }
             if isPicked {
                 Label("Best!", systemImage: "star.fill")
@@ -82,6 +84,7 @@ struct CompareView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.secondary.opacity(0.08))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(isPicked ? Color.accentColor : Color.clear, lineWidth: 4))
         .opacity(isDimmed ? 0.4 : 1.0)
