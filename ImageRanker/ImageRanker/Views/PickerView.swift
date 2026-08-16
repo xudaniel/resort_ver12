@@ -10,39 +10,42 @@ struct PickerView: View {
     @State private var isLoading = false
 
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        // ScrollView keeps the Start Comparing button reachable on compact
+        // landscape heights (~300pt) where the header, picker, strip, and
+        // footer would otherwise overflow.
+        ScrollView {
+            VStack(spacing: 24) {
+                VStack(spacing: 8) {
+                    Image(systemName: "photo.stack")
+                        .font(.system(size: 56))
+                        .foregroundStyle(.tint)
+                    Text("Select at least 3 photos")
+                        .font(.headline)
+                    Text("You'll compare them in pairs to find your favorite three.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                }
+                .padding(.top, 24)
 
-            VStack(spacing: 8) {
-                Image(systemName: "photo.stack")
-                    .font(.system(size: 56))
-                    .foregroundStyle(.tint)
-                Text("Select at least 3 photos")
-                    .font(.headline)
-                Text("You'll compare them in pairs to find your favorite three.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
+                PhotosPicker(selection: $selection, maxSelectionCount: 100, matching: .images) {
+                    Label("Choose Photos", systemImage: "photo.on.rectangle.angled")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.horizontal, 32)
+
+                if isLoading {
+                    ProgressView("Loading photos…")
+                } else if !images.isEmpty {
+                    thumbnailStrip
+                    infoFooter
+                }
             }
-
-            PhotosPicker(selection: $selection, maxSelectionCount: 100, matching: .images) {
-                Label("Choose Photos", systemImage: "photo.on.rectangle.angled")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-            }
-            .buttonStyle(.borderedProminent)
-            .padding(.horizontal, 32)
-
-            if isLoading {
-                ProgressView("Loading photos…")
-            } else if !images.isEmpty {
-                thumbnailStrip
-                infoFooter
-            }
-
-            Spacer()
+            .padding(.bottom, 24)
         }
         // .task(id:) automatically cancels the prior load when selection changes,
         // preventing stale-photo and stuck-spinner races.
