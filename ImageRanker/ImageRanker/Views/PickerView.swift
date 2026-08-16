@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import ImageIO
 
 struct PickerView: View {
     let onReady: ([UIImage]) -> Void
@@ -33,9 +34,6 @@ struct PickerView: View {
             }
             .buttonStyle(.borderedProminent)
             .padding(.horizontal, 32)
-            .onChange(of: selection) { _, newValue in
-                Task { await loadImages(from: newValue) }
-            }
 
             if isLoading {
                 ProgressView("Loading photos…")
@@ -46,7 +44,19 @@ struct PickerView: View {
 
             Spacer()
         }
+        // .task(id:) automatically cancels the prior load when selection changes,
+        // preventing stale-photo and stuck-spinner races.
+        .task(id: selection) {
+            if selection.isEmpty {
+                images = []
+                isLoading = false
+                return
+            }
+            await loadImages(from: selection)
+        }
     }
+
+    // MARK: - Subviews
 
     private var thumbnailStrip: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -69,9 +79,7 @@ struct PickerView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
 
-            Button {
-                onReady(images)
-            } label: {
+            Button { onReady(images) } label: {
                 Label("Start Comparing", systemImage: "play.fill")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
@@ -83,17 +91,36 @@ struct PickerView: View {
         }
     }
 
+    // MARK: - Loading
+
     private func loadImages(from items: [PhotosPickerItem]) async {
         isLoading = true
-        defer { isLoading = false }
         var loaded: [UIImage] = []
         for item in items {
+            guard !Task.isCancelled else { return }  // leave isLoading=true; newer task owns it
             if let data = try? await item.loadTransferable(type: Data.self),
-               let image = UIImage(data: data) {
+               let image = downsample(data: data, maxDimension: 1_200) {
                 loaded.append(image)
             }
         }
+        guard !Task.isCancelled else { return }
         images = loaded
+        isLoading = false
+    }
+
+    /// Decodes at most maxDimension×maxDimension pixels using ImageIO, avoiding a
+    /// full-resolution decode of potentially 48 MP camera images.
+    private func downsample(data: Data, maxDimension: CGFloat) -> UIImage? {
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions) else { return nil }
+        let thumbOptions: [CFString: Any] = [
+            kCGImageSourceThumbnailMaxPixelSize: maxDimension,
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true,
+        ]
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbOptions as CFDictionary) else { return nil }
+        return UIImage(cgImage: cgImage)
     }
 
     private func estimatedComparisons(n: Int) -> Int {

@@ -1,22 +1,20 @@
 import SwiftUI
 
-/// Determines the top 3 images from a set using the minimum number of pairwise
-/// comparisons via a merge-sort tournament:
+/// Determines the top 3 images using the minimum number of pairwise comparisons
+/// via a queue-based tournament:
 ///
-/// Phase 1 (tournament): repeatedly pair up the current "group leaders" and merge
-/// the loser's group behind the winner's. After N-1 comparisons the overall winner
-/// (#1) is known, along with the list of images it personally beat (its "victims").
+/// Phase 1 — tournament (N-1 comparisons): the front two leaders are compared;
+/// the loser's index is appended to the winner's directLosses list and the winner
+/// goes to the back of the queue. After N-1 rounds one leader remains (#1).
 ///
-/// Phase 2 (search for #2): #2 must be one of #1's direct victims (anyone else lost
-/// to someone who isn't #1). A linear "current leader vs next challenger" search over
-/// those victims finds #2 in at most ceil(log2(victims)) comparisons.
+/// Phase 2 — search for #2 (≤ log₂N comparisons): #2 must be one of the images
+/// that #1 directly beat. A linear "current leader vs next challenger" search finds
+/// it.
 ///
-/// Phase 3 (search for #3): search the remaining victims of #1 (excluding #2).
-///
-/// Total comparisons: (N-1) + ceil(log2 N) + ceil(log2 N) - 1.
+/// Phase 3 — search for #3 (≤ 2·log₂N comparisons): #3 must be one of #1's
+/// remaining direct victims OR one of #2's direct victims. Same linear search.
 final class RankingEngine: ObservableObject {
     enum Phase: Equatable { case idle, comparing, done }
-
     struct Pair: Equatable { let left: Int; let right: Int }
 
     @Published private(set) var currentPair: Pair?
@@ -26,13 +24,20 @@ final class RankingEngine: ObservableObject {
 
     private(set) var images: [UIImage] = []
 
-    private var groups: [[Int]] = []
+    // Tournament state
+    private var tournamentLeaders: [Int] = []
+    // directLosses[i] = indices of images that image i directly beat in the tournament
+    private var directLosses: [[Int]] = []
+
+    // Post-tournament
     private var finalist = -1
-    private var finalistVictims: [Int] = []
     private var secondPlace = -1
+
+    // Linear-search state (reused for phase 2 and phase 3)
     private var searchLeader = -1
     private var searchQueue: [Int] = []
     private var searchDone: (() -> Void)?
+
     private var comparisonsCompleted = 0
     private var estimatedTotal = 1
 
@@ -56,23 +61,23 @@ final class RankingEngine: ObservableObject {
         }
     }
 
+    // MARK: - Setup
+
     private func start() {
         comparisonsCompleted = 0
         searchDone = nil
         secondPlace = -1
         finalist = -1
-        finalistVictims = []
         result = []
 
         let n = images.count
         guard n > 0 else { phase = .done; return }
-
         if n == 1 { result = [0]; phase = .done; return }
-
         if n == 2 {
             estimatedTotal = 1
             progress = (0, estimatedTotal)
-            groups = [[0], [1]]
+            directLosses = Array(repeating: [], count: 2)
+            tournamentLeaders = [0, 1]
             phase = .comparing
             nextTournamentStep()
             return
@@ -81,32 +86,37 @@ final class RankingEngine: ObservableObject {
         let logN = Int(ceil(log2(Double(n))))
         estimatedTotal = max(1, (n - 1) + 2 * logN - 1)
         progress = (0, estimatedTotal)
-        groups = (0..<n).map { [$0] }
+        directLosses = Array(repeating: [], count: n)
+        tournamentLeaders = Array(0..<n)
         phase = .comparing
         nextTournamentStep()
     }
 
+    // MARK: - Phase 1: tournament
+
     private func nextTournamentStep() {
-        guard groups.count > 1 else {
-            finalist = groups[0][0]
-            finalistVictims = Array(groups[0].dropFirst())
+        guard tournamentLeaders.count > 1 else {
+            finalist = tournamentLeaders[0]
+            let victims = directLosses[finalist]
 
-            if finalistVictims.isEmpty { result = [finalist]; phase = .done; return }
-            if finalistVictims.count == 1 { result = [finalist, finalistVictims[0]]; phase = .done; return }
+            if victims.isEmpty { result = [finalist]; phase = .done; return }
+            if victims.count == 1 { result = [finalist, victims[0]]; phase = .done; return }
 
-            beginSearch(candidates: finalistVictims, onDone: finishSecondSearch)
+            beginSearch(candidates: victims, onDone: finishSecondSearch)
             return
         }
-        currentPair = Pair(left: groups[0][0], right: groups[1][0])
+        currentPair = Pair(left: tournamentLeaders[0], right: tournamentLeaders[1])
     }
 
     private func applyTournament(winner: Int, loser: Int) {
-        let g0 = groups[0], g1 = groups[1]
-        let winGroup  = (g0[0] == winner) ? g0 : g1
-        let loseGroup = (g0[0] == winner) ? g1 : g0
-        groups.removeFirst(2)
-        groups.append(winGroup + loseGroup)
+        // Record only the direct loss — not the loser's prior victims.
+        // This keeps directLosses[finalist] to O(log N) entries.
+        directLosses[winner].append(loser)
+        tournamentLeaders.removeFirst(2)
+        tournamentLeaders.append(winner)
     }
+
+    // MARK: - Phase 2 & 3: linear search
 
     private func beginSearch(candidates: [Int], onDone: @escaping () -> Void) {
         searchLeader = candidates[0]
@@ -117,13 +127,18 @@ final class RankingEngine: ObservableObject {
     }
 
     private func nextSearchStep() {
-        guard !searchQueue.isEmpty else { let done = searchDone; searchDone = nil; done?(); return }
+        guard !searchQueue.isEmpty else {
+            let done = searchDone; searchDone = nil; done?()
+            return
+        }
         currentPair = Pair(left: searchLeader, right: searchQueue.removeFirst())
     }
 
     private func finishSecondSearch() {
         secondPlace = searchLeader
-        let remaining = finalistVictims.filter { $0 != secondPlace }
+        // #3 must be one of finalist's remaining direct victims OR one of #2's direct victims.
+        let remaining = directLosses[finalist].filter { $0 != secondPlace }
+                      + directLosses[secondPlace]
         guard !remaining.isEmpty else { result = [finalist, secondPlace]; phase = .done; return }
         if remaining.count == 1 { result = [finalist, secondPlace, remaining[0]]; phase = .done; return }
         beginSearch(candidates: remaining, onDone: finishThirdSearch)
